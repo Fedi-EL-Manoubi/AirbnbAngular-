@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5 pt-5">
+    <h1 class="mb-4">Interface d'administration</h1>
+    
+    <!-- Formulaire d'ajout/modification -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">{{ isEditing ? 'Modifier une propriété' : 'Ajouter une propriété' }}</h3>
+      </div>
+      <div class="card-body">
+        <form #propertyForm="ngForm" (ngSubmit)="saveProperty()">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="title" class="form-label">Titre</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="title"
+                name="title"
+                [(ngModel)]="currentProperty.title"
+                required
+                #title="ngModel">
+              <div *ngIf="title.invalid && (title.dirty || title.touched)" class="text-danger mt-1">
+                Titre requis
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="location" class="form-label">Localisation</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="location"
+                name="location"
+                [(ngModel)]="currentProperty.location"
+                required
+                #location="ngModel">
+              <div *ngIf="location.invalid && (location.dirty || location.touched)" class="text-danger mt-1">
+                Localisation requise
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="price" class="form-label">Prix par nuit (€)</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="price"
+                name="price"
+                [(ngModel)]="currentProperty.price"
+                required
+                min="1"
+                #price="ngModel">
+              <div *ngIf="price.invalid && (price.dirty || price.touched)" class="text-danger mt-1">
+                Prix requis et doit être positif
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="image" class="form-label">Image (URL)</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="image"
+                name="image"
+                [(ngModel)]="currentProperty.image"
+                required
+                #image="ngModel">
+              <div *ngIf="image.invalid && (image.dirty || image.touched)" class="text-danger mt-1">
+                URL d'image requise
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary me-2" (click)="resetForm()">Annuler</button>
+            <button type="submit" class="btn btn-primary" [disabled]="propertyForm.invalid">
+              {{ isEditing ? 'Enregistrer les modifications' : 'Ajouter la propriété' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Tableau des propriétés -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Liste des propriétés</h3>
+        <span class="badge bg-primary">{{ properties.length }} propriétés</span>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Titre</th>
+                <th>Localisation</th>
+                <th>Prix/nuit</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let property of properties; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <img [src]="property.image" alt="{{ property.title }}" class="img-thumbnail" 
+                       style="width: 80px; height: 60px; object-fit: cover;">
+                </td>
+                <td>{{ property.title }}</td>
+                <td>{{ property.location }}</td>
+                <td>{{ property.price }}€</td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-primary" (click)="editProperty(i)">
+                      <i class="bi bi-pencil-fill"></i> Modifier
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteProperty(i)">
+                      <i class="bi bi-trash-fill"></i> Supprimer
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="properties.length === 0">
+                <td colspan="6" class="text-center py-3">
+                  Aucune propriété disponible. Ajoutez-en une !
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -149,6 +149,7 @@
 @media (max-width: 991.98px) {
   .navbar-nav {
     margin-top: 1rem;
+    margin-bottom: auto;
   }
   
   .nav-link.text-dark {
